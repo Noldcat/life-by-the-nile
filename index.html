@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life by the Nile</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FFFBED;
+            text-align: center;
+        }
+        h1 {
+            margin-top: 20px;
+        }
+        #map {
+            border-radius: 15px;
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+        }
+        #percentage {
+            font-size: 5em;
+            color: green;
+            font-family: 'EB Garamond', serif;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        #toggle-container select {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+        button {
+            background-color: blue;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+        }
+        button:disabled {
+            background-color: grey;
+        }
+        #feedback {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        #correct-answer {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        footer {
+            margin-top: 40px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Life by the Nile</h1>
+    
+    <div id="toggle-container">
+        <label for="day-night-toggle">Toggle Map:</label>
+        <select id="day-night-toggle" onchange="toggleMap()">
+            <option value="day">Day</option>
+            <option value="night">Night</option>
+        </select>
+    </div>
+    
+    <img id="map" src="day-map.jpg" alt="Map of Egypt during the day">
+    
+    <div id="quiz-container">
+        <h2>Quiz Question</h2>
+        <p>What is the most vital resource provided by the Nile River?</p>
+        <button onclick="checkAnswer('A')">A. Transportation</button>
+        <button onclick="checkAnswer('B')">B. Drinking Water</button>
+        <button onclick="checkAnswer('C')">C. Agriculture</button>
+        <button onclick="checkAnswer('D')">D. Fishing</button>
+        <p id="feedback"></p>
+        <p id="correct-answer"></p>
+    </div>
+
+    <div>
+        <h2>Percentage of Nile River Usage</h2>
+        <div id="percentage">0%</div>
+    </div>
+
+    <script>
+        // Animate percentage display
+        function animatePercentage(targetPercentage) {
+            const percentageElement = document.getElementById('percentage');
+            let currentPercentage = 0;
+
+            const updatePercentage = () => {
+                if (currentPercentage < targetPercentage) {
+                    currentPercentage++;
+                    percentageElement.innerText = `${currentPercentage}%`;
+                    requestAnimationFrame(updatePercentage);
+                }
+            };
+            
+            updatePercentage();
+        }
+
+        // Quiz functionality
+        let attempts = 0; // Counter for the number of attempts
+
+        function checkAnswer(answer) {
+            const feedback = document.getElementById('feedback');
+            const correctAnswer = document.getElementById('correct-answer');
+            const buttons = document.querySelectorAll('#quiz-container button'); // Get all buttons
+
+            attempts++; // Increment the attempts counter
+
+            if (answer === 'C') {
+                feedback.textContent = "Correct! The Nile is vital for agriculture.";
+                correctAnswer.style.display = 'none'; // Hide correct answer explanation
+                attempts = 0; // Reset attempts for next question
+                enableButtons(); // Re-enable buttons for the next question
+            } else {
+                feedback.textContent = "Incorrect. Try again!";
+                if (attempts === 2) { // Check if it's the second attempt
+                    correctAnswer.textContent = "The correct answer is C. Agriculture. The Nile is crucial for farming in Egypt.";
+                    correctAnswer.style.display = 'block'; // Show the correct answer explanation
+                    disableButtons(); // Disable buttons after two attempts
+                    attempts = 0; // Reset attempts for the next question
+                }
+            }
+        }
+
+        // Function to disable buttons
+        function disableButtons() {
+            const buttons = document.querySelectorAll('#quiz-container button');
+            buttons.forEach(button => {
+                button.disabled = true; // Disable each button
+            });
+        }
+
+        // Function to enable buttons (for next question)
+        function enableButtons() {
+            const buttons = document.querySelectorAll('#quiz-container button');
+            buttons.forEach(button => {
+                button.disabled = false; // Enable each button
+            });
+        }
+
+       // Toggle function for the map
+function toggleMap() {
+    const toggle = document.getElementById('day-night-toggle').value;
+    const map = document.getElementById('map');
+    if (toggle === 'day') {
+        map.src = 'Morning.jpg'; // Replace with your day map image
+        map.alt = 'Map of Egypt during the day';
+    } else {
+        map.src = 'Night.jpg'; // Replace with your night map image
+        map.alt = 'Map of Egypt at night';
+    }
+}
+
+// Call the animation function on page load
+window.onload = () => {
+    toggleMap(); // Set the correct initial map
+    animatePercentage(95);
+};
+    </script>
+    
+    <footer>
+        Made with ❤️ by Adam Omar
+    </footer>
+</body>
+</html>
